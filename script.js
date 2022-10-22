@@ -1,64 +1,68 @@
-const container = document.querySelector(".container");
+const p = document.querySelector("p");
+const tds = document.querySelectorAll("td");
+const h3 = document.querySelector("h3");
+const btn = document.querySelector("button");
+let board = ["", "", "", "", "", "", "", "", ""];
+let currentPlayer = "X";
+let gameEnd = false;
+const winC = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 4, 8],
+  [2, 4, 6],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+];
 
-const game = (() => {
-  let gameboard = ["", "", "", "", "", "", "", "", ""];
-  let turn = true;
+tds.forEach((td) =>
+  td.addEventListener("click", (e) => {
+    updateDisplay(td, e);
+    checkWinOrDraw();
+  })
+);
 
-  function mark(e) {
-    if (e.target.tagName === "TD" && e.target.innerText === "") {
-      if (game.turn) {
-        e.target.innerText = "X";
-        game.turn = false;
-      } else {
-        e.target.innerText = "O";
-        game.turn = true;
-      }
-    }
+function checkWinOrDraw() {
+  for (let i = 0; i < winC.length; i++) {
+    if (
+      board[winC[i][0]] === "X" &&
+      board[winC[i][1]] === "X" &&
+      board[winC[i][2]] === "X"
+    )
+      someoneWon("x");
+    else if (
+      board[winC[i][0]] === "O" &&
+      board[winC[i][1]] === "O" &&
+      board[winC[i][2]] === "O"
+    )
+      someoneWon("O");
   }
-
-  function isGameOver() {
-    
+  if (!board.includes("") && gameEnd !== true) {
+    gameEnd = true;
+    p.textContent = "It's a draw!";
   }
+}
 
-  return { gameboard, turn, mark, isGameOver };
-})();
-
-const displayController = (() => {
-  const td = container.querySelectorAll("td");
-  const p = container.querySelector("p");
-
-  function updateDisplay() {
-    game.turn
-      ? (p.innerText = "it is player1's turn")
-      : (p.innerText = "it is player2's turn");
-    for (let i = 0; i < 9; i++) {
-      game.gameboard[i] = td[i].innerText;
-    }
-    console.log(game.gameboard);
+function updateDisplay(td, e) {
+  if (board[e.target.dataset.index] == "" && !gameEnd) {
+    td.textContent = currentPlayer;
+    board[e.target.dataset.index] = td.textContent;
+    currentPlayer = currentPlayer == "X" ? "O" : "X";
+    p.textContent = `It is ${currentPlayer}'s turn`;
   }
+}
 
-  return { updateDisplay };
-})();
+function someoneWon(player) {
+  gameEnd = true;
+  p.textContent = `Game over, ${currentPlayer == "X" ? "O" : "X"} won!`;
 
-const PlayerFactory = (name) => {
-  const makeMove = () => {
-    console.log(`${name} makes a move!`);
-  };
-  const win = () => {
-    console.log(`${name} wins!`);
-  };
-  const lose = () => {
-    console.log(`${name} loses!`);
-  };
+}
 
-  return { name, makeMove, win, lose };
-};
-
-const player1 = PlayerFactory("player1");
-const player2 = PlayerFactory("player2");
-
-container.addEventListener("click", (e) => {
-  game.mark(e);
-  displayController.updateDisplay();
-  game.isGameOver();
+btn.addEventListener("click", () => {
+  board = ["", "", "", "", "", "", "", "", ""];
+  tds.forEach((td) => (td.textContent = ""));
+  currentPlayer = "X";
+  p.textContent = `It is ${currentPlayer}'s turn`;
+  gameEnd = false;
 });
