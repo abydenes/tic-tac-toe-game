@@ -24,20 +24,15 @@ tds.forEach((td) =>
 );
 
 function checkWinOrDraw() {
-  for (let i = 0; i < winC.length; i++) {
+  winC.forEach((c) => {
     if (
-      board[winC[i][0]] === "X" &&
-      board[winC[i][1]] === "X" &&
-      board[winC[i][2]] === "X"
-    )
-      someoneWon("x");
-    else if (
-      board[winC[i][0]] === "O" &&
-      board[winC[i][1]] === "O" &&
-      board[winC[i][2]] === "O"
-    )
-      someoneWon("O");
-  }
+      board[c[0]].length > 0 &&
+      board[c[0]] === board[c[1]] &&
+      board[c[1]] === board[c[2]]
+    ) {
+      someoneWon(`${board[c[0]]}`);
+    }
+  });
   if (!board.includes("") && gameEnd !== true) {
     gameEnd = true;
     p.textContent = "It's a draw!";
@@ -56,7 +51,6 @@ function updateDisplay(td, e) {
 function someoneWon(player) {
   gameEnd = true;
   p.textContent = `Game over, ${currentPlayer == "X" ? "O" : "X"} won!`;
-
 }
 
 btn.addEventListener("click", () => {
