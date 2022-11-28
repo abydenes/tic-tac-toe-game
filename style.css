@@ -12,9 +12,13 @@ body {
   width: 100vw;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   align-items: center;
   background-color: rgb(167, 167, 167);
+}
+
+.hero {
+  margin: 4rem;
+  font-size: 3rem;
 }
 
 .gameboard-container {
@@ -23,6 +27,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   outline: 3px solid black;
+  margin: 3rem;
 }
 
 .cell {
@@ -32,11 +37,25 @@ body {
   justify-content: center;
   align-items: center;
   outline: 1px solid black;
-  font-size: 2rem;
+  font-size: 4rem;
+  font-weight: 900;
   background-color: rgb(221, 221, 221);
 }
 
 .cell:hover {
   background-color: rgb(206, 207, 182);
   cursor: pointer;
+}
+
+.bottom * {
+  text-align: center;
+  margin: 1rem;
+}
+
+.bottom h3 {
+  font-size: 2rem;
+}
+
+button {
+  padding: 1rem 2rem;
 }

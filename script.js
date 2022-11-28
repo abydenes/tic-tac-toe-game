@@ -1,9 +1,14 @@
-const Player = (sign) => {
+const Player = (name, sign) => {
+  this.name = name;
   this.sign = sign;
+
+  const getName = () => name;
+
+  const setName = (str) => (name = str);
 
   const getSign = () => sign;
 
-  return { getSign };
+  return { getSign, getName, setName };
 };
 
 const gameBoard = (() => {
@@ -23,8 +28,8 @@ const gameBoard = (() => {
 })();
 
 const gameController = (() => {
-  const player1 = Player("X");
-  const player2 = Player("O");
+  const player1 = Player("playerOne", "X");
+  const player2 = Player("playerTwo", "O");
   let currentPlayer = player1;
   let roundCount = 1;
   let gameOver = false;
@@ -44,8 +49,7 @@ const gameController = (() => {
       displayController.displayBoard();
       roundCount++;
       isDraw();
-    } else return
-
+    } else return;
   };
 
   const checkWinner = () => {
