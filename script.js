@@ -13,25 +13,81 @@ const gameBoard = (() => {
 
   const getCell = (index) => board[index];
 
-  const reset = () => board.map((x) => (x = ""));
+  const reset = () => {
+    for (let i = 0; i < 9; i++) {
+      board[i] = "";
+    }
+  };
 
   return { setCell, getCell, reset };
 })();
 
 const gameController = (() => {
-  const markCell = (index, sign) => {
-    gameBoard.setCell(index, sign);
+  const player1 = Player("X");
+  const player2 = Player("O");
+  let currentPlayer = player1;
+  let roundCount = 1;
+  let gameOver = false;
+
+  const changeCurrentPlayer = () => {
+    currentPlayer === player1
+      ? (currentPlayer = player2)
+      : (currentPlayer = player1);
+  };
+
+  const playRound = (index) => {
+    if (gameBoard.getCell(index) === "" && !gameOver) {
+      gameBoard.setCell(index, currentPlayer.getSign());
+
+      changeCurrentPlayer();
+
+      displayController.displayMessage(`${currentPlayer.getSign()}'s turn`);
+
+      isGameOver();
+      roundCount++;
+      displayController.displayBoard();
+    }
   };
 
   const checkWinner = () => {
+    const winConditions = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+    ];
 
-  }
+    winConditions.forEach((c) => {
+      if (
+        gameBoard.getCell(c[0]) !== "" &&
+        gameBoard.getCell(c[0]) === gameBoard.getCell(c[1]) &&
+        gameBoard.getCell(c[1]) === gameBoard.getCell(c[2])
+      ) {
+        gameOver = true;
+        displayController.displayMessage(`${currentPlayer.getSign()} won`);
+      }
+    });
+  };
 
-  const resetGame = () => {
-    
-  }
+  const isGameOver = () => {
+    if (roundCount > 9) {
+      displayController.displayMessage("draw");
+    }
 
-  return { markCell };
+  };
+
+  const reset = () => {
+    currentPlayer = player1;
+    roundCount = 1;
+    gameOver = false;
+    displayController.displayMessage(`${currentPlayer.getSign()}'s turn`);
+  };
+
+  return { playRound, reset };
 })();
 
 const displayController = (() => {
@@ -46,12 +102,23 @@ const displayController = (() => {
     }
   };
 
+  const displayMessage = (msg) => {
+    gameStatusMessage.textContent = msg;
+  };
+
+  const reset = () => {
+    gameBoard.reset();
+    gameController.reset();
+    displayBoard();
+  }
+
   cells.forEach((cell) =>
     cell.addEventListener("click", () => {
-      gameBoard.setCell(cell.dataset.index, "X");
-      displayBoard();
+      gameController.playRound(cell.dataset.index);
     })
   );
 
-  return { displayBoard };
+  resetGameButton.addEventListener("click", reset);
+
+  return { displayBoard, displayMessage};
 })();
