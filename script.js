@@ -28,8 +28,8 @@ const gameBoard = (() => {
 })();
 
 const gameController = (() => {
-  const player1 = Player("playerOne", "X");
-  const player2 = Player("playerTwo", "O");
+  const player1 = Player("player1", "X");
+  const player2 = Player("player2", "O");
   let currentPlayer = player1;
   let roundCount = 1;
   let gameOver = false;
@@ -72,6 +72,7 @@ const gameController = (() => {
       ) {
         gameOver = true;
         displayController.displayMessage(`${gameBoard.getCell(c[0])} won`);
+        displayController.highlightCells(c[0], c[1], c[2]);
       }
     });
   };
@@ -103,6 +104,12 @@ const displayController = (() => {
     }
   };
 
+  const highlightCells = (cell1, cell2, cell3) => {
+    cells[cell1].style.backgroundColor = "aliceblue";
+    cells[cell2].style.backgroundColor = "aliceblue";
+    cells[cell3].style.backgroundColor = "aliceblue";
+  };
+
   const displayMessage = (msg) => {
     gameStatusMessage.textContent = msg;
   };
@@ -111,6 +118,7 @@ const displayController = (() => {
     gameBoard.reset();
     gameController.reset();
     displayBoard();
+    cells.forEach((cell) => (cell.style.background = "rgb(221, 221, 221)"));
   };
 
   cells.forEach((cell) =>
@@ -121,5 +129,5 @@ const displayController = (() => {
 
   resetGameButton.addEventListener("click", reset);
 
-  return { displayBoard, displayMessage };
+  return { displayBoard, displayMessage, highlightCells };
 })();
