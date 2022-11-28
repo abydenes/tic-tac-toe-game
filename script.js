@@ -38,15 +38,14 @@ const gameController = (() => {
   const playRound = (index) => {
     if (gameBoard.getCell(index) === "" && !gameOver) {
       gameBoard.setCell(index, currentPlayer.getSign());
-
       changeCurrentPlayer();
-
       displayController.displayMessage(`${currentPlayer.getSign()}'s turn`);
-
-      isGameOver();
-      roundCount++;
+      checkWinner();
       displayController.displayBoard();
-    }
+      roundCount++;
+      isDraw();
+    } else return
+
   };
 
   const checkWinner = () => {
@@ -68,16 +67,15 @@ const gameController = (() => {
         gameBoard.getCell(c[1]) === gameBoard.getCell(c[2])
       ) {
         gameOver = true;
-        displayController.displayMessage(`${currentPlayer.getSign()} won`);
+        displayController.displayMessage(`${gameBoard.getCell(c[0])} won`);
       }
     });
   };
 
-  const isGameOver = () => {
-    if (roundCount > 9) {
+  const isDraw = () => {
+    if (roundCount == 10 && !gameOver) {
       displayController.displayMessage("draw");
     }
-
   };
 
   const reset = () => {
@@ -91,7 +89,6 @@ const gameController = (() => {
 })();
 
 const displayController = (() => {
-  const gameboardContainer = document.querySelector(".gameboard-container");
   const cells = document.querySelectorAll(".cell");
   const gameStatusMessage = document.querySelector(".game-status-message");
   const resetGameButton = document.querySelector(".reset-game-button");
@@ -110,7 +107,7 @@ const displayController = (() => {
     gameBoard.reset();
     gameController.reset();
     displayBoard();
-  }
+  };
 
   cells.forEach((cell) =>
     cell.addEventListener("click", () => {
@@ -120,5 +117,5 @@ const displayController = (() => {
 
   resetGameButton.addEventListener("click", reset);
 
-  return { displayBoard, displayMessage};
+  return { displayBoard, displayMessage };
 })();
