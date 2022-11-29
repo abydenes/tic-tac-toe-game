@@ -94,6 +94,9 @@ const gameController = (() => {
 })();
 
 const displayController = (() => {
+  // I need to implement playernames
+  const player1Name = document.querySelector(".player1-name");
+  const player2Name = document.querySelector(".player2-name");
   const cells = document.querySelectorAll(".cell");
   const gameStatusMessage = document.querySelector(".game-status-message");
   const resetGameButton = document.querySelector(".reset-game-button");
